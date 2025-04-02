@@ -84,10 +84,11 @@ async function scrapeData(url) {
 
             product.name = name;
             product.spec = card_specs;
+            product.stats = card_stats;
             product.price = cleanedPrice;
             products.push(product);
         });
-        // console.log(products);
+        console.log(products);
 
     } catch (error) {
         console.error('Błąd scrapowania:', error);

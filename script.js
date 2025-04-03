@@ -29,12 +29,29 @@ function getRating($,stats_info){
 function scrapeProductsInfo($){
     let products = [];
     $('.cat-product').each((index, element) =>{
-        const product = {};
-        let card_specs = {"card_length":0,"RAM":0,"chipset":0,"clock_speed":0,"merging":false};
-        let card_stats = {"rating_count":0,"questions_count":0,"purchases_count":0,"rating":0};
-        let card_spec_keys = Object.keys(card_specs);
-        let card_stats_keys = Object.keys(card_stats);
-
+        const product = {   "card_length":null,
+                            "card_length_unit":null,
+                            "RAM":null,
+                            "RAM_unit":null,
+                            "chipset":null,
+                            "clock_speed":null,
+                            "clock_speed_unit":null,
+                            "merging":null,
+                            "rating_count":'0',
+                            "questions_count":'0',
+                            "purchases_count":'0',
+                            "rating":'0.0'
+                        
+                        };
+        // let card_specs = {  "card_length":null,
+        //                     "card_length_unit":null,
+        //                     "RAM":null,
+        //                     "RAM_unit":null,
+        //                     "chipset":null,
+        //                     "clock_speed":null,
+        //                     "clock_speed_unit":null,
+        //                     "merging":null};
+        // let card_stats = {"rating_count":'0',"questions_count":'0',"purchases_count":'0',"rating":'0.0'};
 
         let name = $(element).find('.cat-product-name__header').text().trim();
         let price = $(element).find('.cat-product-price').find('.price-new').text().trim()
@@ -50,34 +67,69 @@ function scrapeProductsInfo($){
 
         // console.log(stats_info.text().trim());
         // console.log("_______________");
-        for (let i=0;i<card_spec_keys.length;i++){
-            if(card_spec_keys[i]=="clock_speed"){
-                // console.log($(card_info[i]).find('b').text().trim());
-                let clock = $(card_info[i]).find('b').text().trim().replace(/^.*?(\d+).*$/g,'$1');
-                // console.log(clock);
+        const extractNumber = (str,nullCase) => {
+            return /\d+/.test(str) ? str.replace(/^.*?(\d+).*$/, '$1') : nullCase;
+        };
 
-                card_specs[card_spec_keys[i]] = clock;
-                continue;
+        for (let i=0;i<card_info.length;i++){
+            let curCategory = $(card_info[i]).clone()
+                                            .children('b')
+                                            .remove()
+                                            .end()
+                                            .text()
+                                            .trim();
+            if (curCategory == 'Ilość pamięci RAM:') {
+
+                const full_RAM = $(card_info[i]).find('b').text().trim();
+                let RAM_size = extractNumber(full_RAM,null)
+                if(RAM_size != null){
+                    product.RAM = RAM_size;
+                    product.RAM_unit = full_RAM.replace(/.*?(\w+)$/g,'$1');
+                }
+            } else if (curCategory == 'Długość karty:') {
+
+                const full_card_length = $(card_info[i]).find('b').text().trim();
+                let length = extractNumber(full_card_length,null)
+                if(length != null){
+                    product.card_length = length;
+                    product.card_length_unit = full_card_length.replace(/.*?(\w+)$/g,'$1');
+                }
+                // console.log(card_specs.card_length,card_specs.card_length_unit);
+
+            } else if (curCategory == 'Rodzaj chipsetu:') {
+                product.chipset = $(card_info[i]).find('b').text().trim();
+            } else if (curCategory == 'Taktowanie rdzenia w trybie boost:') {
+
+                const full_clock_speed = $(card_info[i]).find('b').text().trim();
+                let clock_speed_value = extractNumber(full_clock_speed, null);
+                if (clock_speed_value != null) {
+                    product.clock_speed = clock_speed_value;
+                    product.clock_speed_unit = full_clock_speed.replace(/.*?(\w+)$/g, '$1');
+                }
+
+            } else if (curCategory == 'Łączenie kart:') {
+                product.merging = $(card_info[i]).find('b').text().trim();
+            } else {
+                // Other categories ....
             }
-            card_specs[card_spec_keys[i]] = $(card_info[i]).find('b').text().trim();
-            // console.log($(card_info[i]).find('b').text().trim());
+           
         }
+        // console.log(card_specs);
 
-        card_stats.rating_count = stats_info.find('.rating-count').text().trim().replace(/\((\d+)\)/g,'$1'); // assuming format (123)
-        card_stats.questions_count = stats_info.find('.cat-product-tech').text().trim().replace(/^.*?(\d+).*$/g,'$1');
-        if(card_stats.questions_count != "Zapytaj społeczności"){
-            card_stats.rating = getRating($,stats_info);
-        }
-        else card_stats.rating = 0;
-        card_stats.purchases_count = stats_info.find('.cat-product-sold').text().trim().replace(/^.*?(\d+).*$/g,'$1');
+
+        product.rating_count = extractNumber(stats_info.find('.rating-count').text().trim(),'0') //.replace(/\((\d+)\)/g,'$1'); // assuming format (123)
+        product.questions_count = extractNumber(stats_info.find('.cat-product-tech').text().trim(),'0');
+        product.rating = getRating($,stats_info);
+        
+        product.purchases_count = extractNumber(stats_info.find('.cat-product-sold').text().trim(),'0') //.replace(/^.*?(\d+).*$/g,'$1');
         
         // console.log(rating_inputs);
         // console.log(card_stats);
 
 
         product.name = name;
-        product.spec = card_specs;
-        product.stats = card_stats;
+        // product.spec = card_specs;
+        // product.stats = card_stats;
         product.price = cleanedPrice;
         products.push(product);
     });
@@ -106,7 +158,7 @@ function getPageDetails($){
     return pageDetails;
 }
 
-async function Scrape(url){
+async function scrapeProducts(url){
 
     const products = [];
             
@@ -114,13 +166,20 @@ async function Scrape(url){
     // const full_url = "https://www.morele.net"+pageInfo.next_page_href;
     
     do{
-        var [curPageProducts, pageInfo] = await scrapeData(url);
+        try {
+            var [curPageProducts, pageInfo] = await scrapeData(url);
+            // console.log(curPageProducts[1], pageInfo);
+        } catch (error) {
+            console.error("Błąd podczas scrapowania:", error);
+        }
+        
         var url = "https://www.morele.net"+pageInfo.next_page_href;
         
         products.push(...curPageProducts);
         console.log("Scraping page no. "+pageInfo.page_number+' ... \nNumber of already collected products: '+products.length);
     }while(pageInfo.next_page_href);
 
+    return products;
 }
 async function scrapeData(url) {
     try {
@@ -133,6 +192,7 @@ async function scrapeData(url) {
         var curPageProducts = scrapeProductsInfo($);
         var curPageInfo = getPageDetails($);
         // products.push(...curPageProducts);
+        // console.log(curPageProducts[0])
 
         return [curPageProducts, curPageInfo]; 
 
@@ -146,8 +206,14 @@ const url_amazon = "https://www.amazon.pl/s?k=playstation+5";
 const url_mediaexpert = "https://www.mediaexpert.pl/komputery-i-tablety/laptopy-i-ultrabooki/laptopy";
 const url_xkom = "https://www.x-kom.pl/g-5/c/345-karty-graficzne.html";
 const url_morele = "https://www.morele.net/kategoria/karty-graficzne-12/";
-const url_morele_last = "https://www.morele.net/kategoria/karty-graficzne-12/,,,,,,,,0,,,,/17/";
+const url_morele_last = "https://www.morele.net/kategoria/karty-graficzne-12/,,,,,,,,0,,,,/10/";
 
 // scrapeData("https://books.toscrape.com/");
 // scrapeData(url_morele);
-Scrape(url_morele);
+scrapeProducts(url_morele_last)
+    .then(GPUs =>{
+        console.log(GPUs[2]);
+    })
+    .catch(error =>{
+        console.log(error);
+    });

@@ -95,15 +95,12 @@ function getPageDetails($){
  */
     const pageDetails = {};
 
-    // Extract the current page number
+    // Extract id of pagination on the webpage
     const pagination = $('#category_pagination');
-    // console.log(pagination.html());
-    pageDetails.page_number = pagination.find(".active > a").text().trim() || null;
-    // console.log(pageDetails.page_number);
 
-    // Extract the link to the next page
-    const nextPageHref = pagination.find(".next").find("a").attr("href");
-    // console.log(nextPageHref);
+    pageDetails.page_number = pagination.find(".active").text().trim() || null;
+
+    const nextPageHref = pagination.find(".next").find("a").attr("href")|| null;
     pageDetails.next_page_href = nextPageHref ? nextPageHref : null;
 
     return pageDetails;
@@ -119,20 +116,17 @@ async function Scrape(url){
     do{
         var [curPageProducts, pageInfo] = await scrapeData(url);
         var url = "https://www.morele.net"+pageInfo.next_page_href;
-        console.log(pageInfo.page_number);
+        
         products.push(...curPageProducts);
+        console.log("Scraping page no. "+pageInfo.page_number+' ... \nNumber of already collected products: '+products.length);
+    }while(pageInfo.next_page_href);
 
-    }while(pageInfo.next_page_href)
-    // console.log(curPageProducts);
-    // products.push(...curPageProducts);
-    
 }
 async function scrapeData(url) {
     try {
-        const { data } = await axios.get(url); // Pobieranie strony
 
-
-        const $ = cheerio.load(data); // Wczytanie HTML-a do Cheerio
+        const { data } = await axios.get(url); 
+        const $ = cheerio.load(data); 
         
         // const products = [];
         
@@ -140,9 +134,6 @@ async function scrapeData(url) {
         var curPageInfo = getPageDetails($);
         // products.push(...curPageProducts);
 
-        // console.log(curPageProducts);
-        // console.log(products);
-        // console.log(products.length)
         return [curPageProducts, curPageInfo]; 
 
     } catch (error) {
@@ -155,7 +146,7 @@ const url_amazon = "https://www.amazon.pl/s?k=playstation+5";
 const url_mediaexpert = "https://www.mediaexpert.pl/komputery-i-tablety/laptopy-i-ultrabooki/laptopy";
 const url_xkom = "https://www.x-kom.pl/g-5/c/345-karty-graficzne.html";
 const url_morele = "https://www.morele.net/kategoria/karty-graficzne-12/";
-const url_morele_last = "https://www.morele.net/kategoria/karty-graficzne-12/,,,,,,,,0,,,,/18/";
+const url_morele_last = "https://www.morele.net/kategoria/karty-graficzne-12/,,,,,,,,0,,,,/17/";
 
 // scrapeData("https://books.toscrape.com/");
 // scrapeData(url_morele);

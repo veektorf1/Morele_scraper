@@ -1,16 +1,6 @@
 const axios = require('axios');
 const cheerio = require('cheerio');
-const UserAgent = require('user-agents');
-
-const userAgent = new UserAgent();
-const headers = {
-    'User-Agent': userAgent.toString(),
-    'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
-    'Accept-Encoding': 'gzip, deflate, br, zstd',
-    'Accept-Language': 'en-US,en;q=0.5',
-    'Host': 'www.x-kom.pl',
-    'Connection': 'keep-alive'
-}
+const fs = require('fs');
 
 function getRating($,stats_info){
     var rating_inputs = stats_info.find('.stars-box > fieldset');
@@ -212,7 +202,7 @@ const url_morele_last = "https://www.morele.net/kategoria/karty-graficzne-12/,,,
 // scrapeData(url_morele);
 scrapeProducts(url_morele_last)
     .then(GPUs =>{
-        console.log(GPUs[2]);
+        
     })
     .catch(error =>{
         console.log(error);

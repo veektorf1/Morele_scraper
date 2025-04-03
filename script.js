@@ -200,9 +200,10 @@ const url_morele_last = "https://www.morele.net/kategoria/karty-graficzne-12/,,,
 
 // scrapeData("https://books.toscrape.com/");
 // scrapeData(url_morele);
-scrapeProducts(url_morele_last)
+scrapeProducts(url_morele)
     .then(GPUs =>{
-        
+        fs.writeFileSync('data.json', JSON.stringify(GPUs, null, 2));
+        console.log('Scraping done!');
     })
     .catch(error =>{
         console.log(error);

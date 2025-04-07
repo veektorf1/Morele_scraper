@@ -105,7 +105,6 @@ function scrapeProductsInfo($){
             }
            
         }
-        // console.log(card_specs);
 
 
         product.rating_count = extractNumber(stats_info.find('.rating-count').text().trim(),'0') //.replace(/\((\d+)\)/g,'$1'); // assuming format (123)
@@ -113,14 +112,9 @@ function scrapeProductsInfo($){
         product.rating = getRating($,stats_info);
         
         product.purchases_count = extractNumber(stats_info.find('.cat-product-sold').text().trim(),'0') //.replace(/^.*?(\d+).*$/g,'$1');
-        
-        // console.log(rating_inputs);
-        // console.log(card_stats);
 
 
         product.name = name;
-        // product.spec = card_specs;
-        // product.stats = card_stats;
         product.price = cleanedPrice;
         products.push(product);
     });

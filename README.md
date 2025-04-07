@@ -1,6 +1,6 @@
-# GPU Performance & Pricing ETL Pipeline
+# eCommerce Scraper
 
-This project demonstrates a complete **ETL (Extract, Transform, Load)** pipeline for analyzing GPU prices and performance characteristics using publicly available data on [morele.net]("https://www.morele.net/"). Gathered insights can be found in the dashboard on Looker Studio.
+Project demonstrates a full **ETL (Extract, Transform, Load)** pipeline for analyzing GPU prices and performance characteristics using publicly available data on [morele.net]("https://www.morele.net/"). Gathered insights can be found in the dashboard in Looker Studio.
 
 
 ##  Live Dashboard
@@ -19,7 +19,7 @@ This project demonstrates a complete **ETL (Extract, Transform, Load)** pipeline
 |--------------|-----------------------------------------|
 | **Extract**  | Node.js, Axios, Cheerio (Web scraping), Regex |
 | **Transform**| Python, Pandas                  |
-| **Load**     | Google BigQuery, `google-cloud-bigquery` lib |
+| **Load**     | Python, Google BigQuery, google-cloud-bigquery |
 | **Orchestration** | Bash Script (for local runs)       |
 | **Visualization** | Looker Studio (GCP)               |
 

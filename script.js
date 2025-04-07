@@ -4,7 +4,7 @@ const fs = require('fs');
 
 function getRating($,stats_info){
     var rating_inputs = stats_info.find('.stars-box > fieldset');
-    var rating = '0.0';
+    var rating = null;
     $(rating_inputs).find("input").each((index,element) =>{
 
         if($(element).attr('checked')=="checked"){
@@ -30,7 +30,7 @@ function scrapeProductsInfo($){
                             "rating_count":'0',
                             "questions_count":'0',
                             "purchases_count":'0',
-                            "rating":'0.0'
+                            "rating":null
                         
                         };
         // let card_specs = {  "card_length":null,
@@ -49,6 +49,7 @@ function scrapeProductsInfo($){
                             .replace(/\s+(zł)$/,'')
                             .replace(/(\d)?\s+(\d)/,'$1$2')
                             .replace(/(\d),(\d)/g,'$1.$2');
+        if(cleanedPrice == '') cleanedPrice = null;
 
         
         

@@ -193,9 +193,6 @@ async function scrapeData(url) {
     return [null,null]
 }
 
-const url_amazon = "https://www.amazon.pl/s?k=playstation+5";
-const url_mediaexpert = "https://www.mediaexpert.pl/komputery-i-tablety/laptopy-i-ultrabooki/laptopy";
-const url_xkom = "https://www.x-kom.pl/g-5/c/345-karty-graficzne.html";
 const url_morele = "https://www.morele.net/kategoria/karty-graficzne-12/";
 const url_morele_last = "https://www.morele.net/kategoria/karty-graficzne-12/,,,,,,,,0,,,,/10/";
 

@@ -6,6 +6,10 @@ This project demonstrates a complete **ETL (Extract, Transform, Load)** pipeline
 ##  Live Dashboard
 
  [View Looker Studio Report](https://lookerstudio.google.com/reporting/d1665484-99d1-43cb-bcf7-d049b0d0bd99)
+ 
+![image](https://github.com/user-attachments/assets/a82263b8-7f3f-409b-aa00-a78300c306bd)
+
+
 
 ---
 

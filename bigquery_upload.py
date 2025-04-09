@@ -1,6 +1,8 @@
 from google.cloud import bigquery
 import os
+from dotenv import load_dotenv
 
+load_dotenv()
 if os.getenv("GOOGLE_APPLICATION_CREDENTIALS") is None:
     raise ValueError("Environmental variable GOOGLE_APPLICATION_CREDENTIALS is not set")
 
@@ -17,10 +19,10 @@ except Exception as e:
 table_ref = f"{project_id}.{dataset_id}.{table_id}"
 
 job_config = bigquery.LoadJobConfig(
-    source_format=bigquery.SourceFormat.CSV,
+    source_format = bigquery.SourceFormat.CSV,
     skip_leading_rows=1,
     autodetect=True,
-    write_disposition="WRITE_TRUNCATE" 
+    write_disposition=bigquery.WriteDisposition.WRITE_TRUNCATE,
 )
 
 with open(csv_file_path, "rb") as source_file:
@@ -31,4 +33,4 @@ with open(csv_file_path, "rb") as source_file:
     )
 
 load_job.result()
-print(f"Data uploaded to bigquery {table_ref}")
+print(f"Data uploaded successfully to bigquery {table_ref}")

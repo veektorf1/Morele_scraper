@@ -3,6 +3,7 @@ import os
 from dotenv import load_dotenv
 
 load_dotenv()
+
 if os.getenv("GOOGLE_APPLICATION_CREDENTIALS") is None:
     raise ValueError("Environmental variable GOOGLE_APPLICATION_CREDENTIALS is not set")
 

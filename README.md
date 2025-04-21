@@ -28,7 +28,9 @@ Project demonstrates a full **ETL (Extract, Transform, Load)** pipeline for anal
 
 ##  Pipeline Overview
 
-1. **Scrape** data from an e-commerce site using Cheerio for scraping and regex for cleansing data (`script.js`) 
+[Pipeline](Pipeline.svg)
+
+1. **Scrape** data from an e-commerce site using Cheerio for scraping and regex for cleansing data (`scrape.js`) 
    - Scraping data from the e-commerce store
    - Extracting necessary infromation from the html, e.g. Value, unit using regex 
 2. **Clean and transform** the data with Python (`transform.py`)

@@ -13,7 +13,7 @@ Project demonstrates a full **ETL (Extract, Transform, Load)** pipeline for anal
 
 ##  Pipeline Overview
 
-[Pipeline](Pipeline.png)
+<img src="Pipeline.png" alt="Pipeline ETL">
 
 1. **Scrape** data from an e-commerce site using Cheerio for scraping and regex for cleansing data (`scrape.js`) 
    - Scraping data from the e-commerce store
